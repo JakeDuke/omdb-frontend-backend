@@ -59,7 +59,6 @@ export default {
       year: "",
       type: "",
       typeOptions: ["movie", "series", "episode"],
-      baseUrl: "http://www.omdbapi.com/?i=tt3896198&apikey=f68f2cab",
       loading: null,
       results: [],
       error: "",
@@ -68,7 +67,6 @@ export default {
   computed: {
     url() {
       return (
-        this.baseUrl +
         `&t=${this.movieName}` +
         `${this.year && `&y=${this.year}`}` +
         `${this.type && `&type=${this.type}`}`
@@ -88,7 +86,9 @@ export default {
       this.error = "";
       try {
         this.loading = true;
-        const { data } = await this.axios.get(this.url);
+        const { data } = await this.axios.post("/movies", null, {
+          params: this.url,
+        });
         if (data.Error) this.error = data.Error;
         this.results.push(data);
       } catch (e) {
